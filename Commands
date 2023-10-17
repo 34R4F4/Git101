@@ -60,28 +60,15 @@ $ git add index.html	//single specific file
 $ git add --all		//all files
 $ git add FOLDER	//folder
 $ git add .		//all files and folders
-	$ $ git add --all
-	>> new file:   Commands
-	   new file:   README.md
-	   new file:   index.html
-
-#== Commiting
-$ git commit -m "commit 0-01.0"
->> 3 files changed, 179 insertions(+)
-   create mode 100644 Commands
-   create mode 100644 README.md
-   create mode 100644 index.html
-
-#== Log
-$ git log
-$ git shortlog
-     >> commit-ID:	3e4efb88ea09816ad3402d20dc1ed745ffa32284
-	Author: 	Arafa <khalafarafa@gmail.com>
-	Date:  		Tue Oct 17 13:21:32 2023 +0300
-	Message:	commit 0-01.0
-
-#== Undo Commit
-$ git revert [commit-id]
+>>
+#==
+$
+>>
+#==
+$
+>>
+#==
+$
 >>
 #==
 $
