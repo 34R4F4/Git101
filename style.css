@@ -1,0 +1,14 @@
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+body {
+	background-color: #EEE;
+}
+h1 {
+	color: blue;
+}
+p {
+	background-color: #333;
+}
