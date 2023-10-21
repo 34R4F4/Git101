@@ -1,0 +1,476 @@
+||||||||||||||||||||||[ Git ]|||||||||||||||||||||||||
+
+#== Directory
+$ pwd
+> /Desktop/Git101
+
+#== Check Git
+$ $ git --version
+> git version 2.34.1
+
+#== Set Git
+$ git config --global user.name "Arafa"
+$ git config --global user.email "khalafarafa@gmail.com"
+	$ git config -l
+	> user.name=Arafa
+	   user.email=khalafarafa@gmail.com
+
+#== Initial Git Repository
+$ git init
+> Initialized empty Git repository in /Desktop/Git101/.git/
+	$ ls
+	> Commands
+
+#== Create Files in Repo
+$ echo "README File" > README.md
+	$ ls
+	> Commands  README.md
+		$ cat README.md
+		> README File
+#==
+$ vi index.html
+	:<head>
+		<title>
+		        Hello Git
+		</title>
+	</head>
+	<body>
+		<h1>
+		        Hello Git
+		</h1>
+		<p>
+		index page
+		</p>
+	</body>
+$ ls
+> Commands  index.html  README.md
+
+
+#==fILES
+	[untracked]	[tracked]	[Staging]	[Commit]
+	New		Modified	git add FILE	git commit -m "msg"
+
+#== Git Status
+$ git status
+> Untracked files:
+	Commands
+	README.md
+	index.html
+
+#== Staging
+$ git add index.html	//single specific file
+$ git add --all		//all files
+$ git add FOLDER	//folder
+$ git add .		//all files and folders
+	$ $ git add --all
+	> new file:   Commands
+	   new file:   README.md
+	   new file:   index.html
+
+#== Commiting
+$ git commit -m "commit 0-01.0"
+> 3 files changed, 179 insertions(+)
+   create mode 100644 Commands
+   create mode 100644 README.md
+   create mode 100644 index.html
+
+#== Log
+$ git log
+$ git shortlog
+     > commit-ID:	3e4efb88ea09816ad3402d20dc1ed745ffa32284
+	Author: 	Arafa <khalafarafa@gmail.com>
+	Date:  		Tue Oct 17 13:21:32 2023 +0300
+	Message:	commit 0-01.0
+
+#== Undo Commit
+$ git revert [commit-id]
+	$ rm commands
+	$ ls
+	>
+	$ touch index.html
+
+#== Branches ==
+
+#== view branches
+$ git branch
+> * master
+
+#== create new branch
+$ git branch 1-html
+	 $ git branch
+	>   1-html
+	   * master	// *current branch
+
+#== switch branch
+$ git checkout 1-html
+> Switched to branch '1-html'
+	 $ git branch
+	> * 1-html
+	     master
+
+$ ls
+> index.html
+
+$ git status
+> On branch 1-html
+   nothing to commit, working tree clean
+
+$ vi index.html
+	<head>
+		<title>Hello Git</title>
+	</head>
+	<body>
+		<h1> Hello Git</h1>
+		<p>index page</p>
+		<img src="img001.png" alt="img001" />
+	</body>
+
+add> img001.png to git101 folde
+
+$ git status
+> On branch 1-html
+     Changes not staged for commit:
+	modified:   index.html
+     Untracked files:
+	img001.png
+
+$ git add --all
+> On branch 1-html
+    Changes to be committed:
+	new file:   img001.png
+	modified:   index.html
+
+$ git commit -m "commit 1-01.0"
+
+$ git checkout master
+> Switched to branch 'master'
+
+$ ls
+> index.html
+
+
+#== HOT FIXEs ==  new temporary branch for ergunt edits
+$ git checkout -b hot-fix_001
+> Switched to a new branch 'hot-fix_001'
+
+$ git branch
+>   1-html
+  * hot-fix_001
+    master
+
+$ touch style.css
+$ vi style.css
+	* {
+		margin: 0px;
+		padding: 0px;
+	}
+
+	body {
+		background-color: #EEE;
+	}
+	h1 {
+		color: blue;
+	}
+	p {
+		background-color: #333;
+	}
+
+$ git status
+> On branch hot-fix_001
+Untracked files:
+	style.css
+
+$ git add --all
+
+$ git status
+> On branch hot-fix_001
+  Changes to be committed:
+	new file:   style.css
+
+$ git commit -m "commit x-01.0"
+
+#== Merge Branches ==
+1- switch to the main target branch "master"
+	$ git checkout master
+	> Switched to branch 'master'
+2- merge secondary "hot-fix_001" branch with target "master" branch
+	$ git merge hot-fix_001
+
+$ git branch
+>  1-html
+   hot-fix_001
+ * master
+
+#== Delete Branche ==
+$ git branch -D hot-fix_001
+
+$ git branch
+>  1-html
+ * master
+
+#== Merge C‫‪onflicts‬‬ ==
+
+$ git checkout -b hot-fix_002
+> Switched to a new branch 'hot-fix_002'
+
+$ vi style.css
+	* {
+		margin: 0px;
+		padding: 0px;
+	}
+
+	body {
+		background-color: #EEE;
+	}
+	h1 {
+		color: yellow;	//edited blue > yellow
+	}
+	p {
+		background-color: #333;
+	}
+
+$ git add --all
+$ git commit -m "commit x-02.0"
+
+$ git checkout master
+$ vi style.css
+	L10: color: red;	//edited blue > red
+$ git add --all
+$ git commit -m "commit 0x-02.0"
+
+$ git merge hot-fix_002
+> CONFLICT (content): Merge conflict in style.css
+
+#== Conflict Resolve
+$ git status
+> On branch master
+  You have unmerged paths.
+  Unmerged paths:
+	both modified:   style.css
+
+$ vi style.css
+	L10:
+	<<<<<<< HEAD
+	color: red;
+	===========
+	>>>>>>> hot-fix_002
+	color: yellow;
+
+	> edit manually
+	L10:
+	color: red;
+$ git add style.css
+
+$ git merge --continue
+
+$ git branch
+>   1-html
+    hot-fix_002
+  * master
+
+$ git branch -D hot-fix_002
+> Deleted branch hot-fix_002 (was 2b57a5f).
+
+$ git branch
+>   1-html
+  * master
+
+_____________________________________________________
+|||||||||||||||||||||[ GitHub ]||||||||||||||||||||||
+
+		 |-clone
+Remote Repository|-clone
+		 |-clone
+
+#== Git-Hub Rpo
+1- create gitHub repository
+	GitHub-Repo-URL: git@github.com:34R4F4/Git101.git
+2- export local "Git101" repo to github
+	$ git remote add <remote-name> <github-repo-url>
+	remote-name: origin	// GitHub Repository
+	$ git remote add origin git@github.com:34R4F4/Git101.git
+
+#== view remote repos
+$ git remote -v
+> origin	git@github.com:34R4F4/Git101.git (fetch)
+  origin	git@github.com:34R4F4/Git101.git (push)
+
+----------
+#== PUSH send local edits to remote repo
+
+#==  generate an SSH key
+
+$ ssh-keygen -t rsa -b 4096
+> /home/arafa/.ssh/id_rsa.pub
+> ssh key finger-print: iy9B/PjKHFvuMUxHGJrHbg9oqeDU85xiUcE98cGwHYg
+
+$ cat id_rsa.pub
+> ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDSTVDFhmc5a42s/r8tHBu6iAENgKrR1U6gVXviOaJ6FG1nzYLj3XCBLsOhnYveHtI2CrBLUGun+4kVVmditVfcUJ/UTijABeB2W8qbJPL2Ls87tye9jfg1dGRREsco5JR04SIQpu0cPYbe9RRJ31rdBf80/Vv+ntPm8LinrxCaEvHy/QakIVbtIPrKN8Q/ltreZkcDQW6dF7ZCgLccZqjC0imRFPeS5T/hQDe7yCiByPYp6tPrKgM/c8zjgG7as1LBEE/WS4zedzYeydBd7mCmAbTyF2Jq5xiYZDyasRlXMKAqceeNpy9mZlqXmpsz1/Ms76hLGq5KBy4W/aPJtiH2Q+toGMngOh4BFN9buVURAGg7z1MmeCRueMy64TaMRd5ebOnBcKn3g/1MM/o4LDwDFVA8xJ70Uayce0zkJDYD9pQxdpJb7MRQgFMKlBBKfz+y50TnIQcS56pdZMWya1pZBUbDUgFl2owWXS65CySY5okQAkOGJ2Snunx+hSYTp7v9dWhF4wyYaLjPZc8EOjC2MtdqVuu9SlcX9rztF5vair8n45CoJLny2+T1F4MytrF4oarh1UfDEqdgtZnbtU6PQbOccqx2chsxbVoipeRfxJbfuM5N1LKUDaC+1m/iGI8wrK5od55G5qb5sU8j8WbX7cV/wmYB+R7gj4Uj4iDFzw== arafa@arafa-Inspiron-3542
+
+#== Push local repo to gitHub
+$ git push -u origin main
+----------
+
+#== PULL import modified github repo to local repo
+-edit file in github
+style.css
+	h1 {
+		color: red;
+		text-align: center; //new insert
+	}
+$ git pull
+> From github.com:34R4F4/Git101
+   356be59..7a27f9a  main       -> origin/main
+   style.css | 1 +
+   1 file changed, 1 insertion(+)
+
+#== create branch from GitHub
+- create branch Hub001
+
+----------------------------
+#== GitHub WorkFlow ==
+- Test Modifications
+1- create new branch for developer for test
+	master: is production branch
+2- commit modifications in the test branch
+3- pull request to merge final commits from test branch
+	when developer end his task request-merge his test branch with master
+4- code review
+	team review the commits of merge-request
+5- merge & publish
+	merge the test branches to master and deploy and publish
+
+----------------------------
+#== GitHub Pages ==
+- hosting web pages using GitHub as Server
+	username.github.io
+1- create gh-pages branch
+2- go to	https://34r4f4.github.io/Git101/
+
+- To get a custom domain for your GitHub Pages site
+1- purchase a domain, GoDaddy, Namecheap, or Google Domains
+2- add a CNAME record to your domain's DNS settings.
+    Host: @
+    Points to: cname.github.com
+
+----------------------------
+
+>#== FORK ==
+GitHub feature to drived a repository copy in your account
+
+----------------------------
+#== GitHub Repository CLONNING ==
+import a gitHub created repo copy to local device
+	$ git clone <repo-url>
+
+$ git clone git@github.com:34R4F4/Git101.git
+
+
+==================
+git@github.com:34R4F4/Git101.git
+------------------
+#…or create a new repository on the command line
+echo "# Git101" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:34R4F4/Git101.git
+git push -u origin main
+------------------
+#…or push an existing repository from the command line
+git remote add origin git@github.com:34R4F4/Git101.git
+git branch -M main
+git push -u origin main
+------------------
+==================
+
+======================================================
+
+#== Adavanced GitHub ==
+
+#== .gitignore ==
+A .gitignore file is a text file that tells Git which files and directories to ignore when committing changes.
+
+-ignore list:
+	log files
+	temporary files
+	hidden files
+	personal files
+	build artifacts
+	IDE-generated files
+
+files and directories wildcards
+    Asterisk (*): Matches any number of characters, including zero characters.
+    Question mark (?): Matches any single character.
+    Square brackets ([]): Match a character or range of characters.
+      the character range [a-z] matches any lowercase letter.
+    Exclamation point (!): Matches any character that is not specified within the square brackets.
+      ![a-z] matches any character that is not a lowercase letter.
+
+    *.txt: Matches all files with the .txt extension.
+    myfile.txt?: Matches the file myfile.txt even if the last character is different.
+    [a-z]*.txt: Matches all files with the .txt extension and a filename that starts with a lowercase letter.
+    ![a-z]*.txt: Matches all files with the .txt extension and a filename that does not start with a lowercase letter.
+
+	# : to write comment
+	a* : all directories that start with the letter a
+	a*.txt : all files with the .txt extension and a filename that starts with the letter a
+	myfile : all files and directories with the name myfile
+	*.txt -f myfile.txt : all files with the .txt extension except for the file myfile.txt
+	name/ : all files and directories in folder name
+
+#== CHECKOUT
+to restore the repository to previous commit point
+	$ git checkout <commit-id>
+
+#== RESET
+- undo one or more commit
+
+1- Hard
+	undo every thing after the specific commit-id
+	$ git reset --hard <commit-id>
+
+2- Soft
+	cancel every thing after the specific commit-id
+	stagging add --all, waiting commit
+	$ git reset --soft <commit-id>
+
+3- Mixed
+	cancel every thing after the specific commit-id
+	but all unstagged, waiting add and commit
+	$ git reset --mixed <commit-id>
+
+
+	 Hard		Mixed		 Soft
+	---|---changes----|----stagging----|----commit
+			       git add	      git commit
+
+#== AMEND
+commit --amend
+	merge (last commit + current staging environment) to a new commit
+
+	 last commit----------|
+	 		      |-+-[commit --amend]--> new commit (new ID)
+	 staging environment--|
+
+#== BLAME
+git blame
+	show who made a change to lines of file
+	$ git blame -L <start>,+<end> <file-path>
+		<start>	start line number
+		<end> end line number
+
+$ git blame -L 10,+1 style.css
+> 17ccb266 (Arafa 2023-10-20 00:42:31 +0300 10)   color: red;
+
+
+
+#== git bisect
+- use binary search algorthim to search commits
+$
+>
+#==
+$
+>
+>
